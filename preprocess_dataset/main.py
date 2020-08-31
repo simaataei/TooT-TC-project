@@ -13,6 +13,7 @@ for od in original_data:
            if od.id not in delete_these:
                delete_these.append(od.id)
 
+
 acceptable_records =[]
 for item in original_data:
     if item.id not in delete_these:
