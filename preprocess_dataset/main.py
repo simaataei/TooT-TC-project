@@ -4,7 +4,7 @@ original_data = list(SeqIO.parse("../Dataset/tcdb17feb2020.fasta", "fasta"))
 import numpy as np
 
 # remove unacceptable amino acids
-'''
+
 unacceptable_amino=['B', 'Z', 'X', 'J', 'O', 'U']
 delete_these=[]
 for od in original_data:
@@ -26,8 +26,7 @@ with open("../Dataset/acceptable_aminoacid_seq.fasta", "w") as handle:
         SeqIO.write(rec, handle, "fasta")
 
 
-'''
-'''
+
 #Sequence Length refinment
 data = list(SeqIO.parse("../Dataset/acceptable_aminoacid_seq.fasta", "fasta"))
 Max_len = 1000
@@ -40,11 +39,11 @@ for s in data :
 with open("../Dataset/normal_len_seq.fasta", "w") as handle:
     for rec in normal_len_dataset:
         SeqIO.write(rec, handle, "fasta")
-'''
+
 
 
 # Making a family map for data extraction
-'''
+
 family_map = {} #key:family number, value: id
 i = 0
 for item in original_data:
@@ -56,10 +55,6 @@ for item in original_data:
          i += 1
 
 
-'''
-
-
-'''
 #extracting 30 random seqs for each family
 data = list(SeqIO.parse("../Dataset/normal_len_seq.fasta", "fasta"))
 selected_list_seqReq = []
@@ -83,7 +78,7 @@ with open("../Dataset/Selected30_families_tcdb.fasta", "w") as handle:
      for rec in selected_list_seqReq:
          SeqIO.write(rec, handle, "fasta")
 
-'''
+
 
 # making a subfamily map for data extraction
 subfamily_map = {} #key:subfamily number, value: id
@@ -112,13 +107,7 @@ for sfm in subfamily_map:
      else:
          removed_list_seqReq.append(sfm)
 
-print(removed_list_seqReq)
-print(len(removed_list_seqReq))
-print(len(selected_list_seqReq))
-
 with open("../Dataset/Selected30_subfamilies_tcdb.fasta", "w") as handle:
      for rec in selected_list_seqReq:
          SeqIO.write(rec, handle, "fasta")
-data = list(SeqIO.parse("../Dataset/Selected30_subfamilies_tcdb.fasta", "fasta"))
-print(len(data))
 
