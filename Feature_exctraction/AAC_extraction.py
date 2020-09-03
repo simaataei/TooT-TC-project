@@ -3,7 +3,7 @@ from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 
 
-def convert_to_aac(dataset):
+def extract_aac(dataset):
     i = 0
     j = 0
     X_aac = np.zeros((len(dataset), 20))
@@ -16,5 +16,5 @@ def convert_to_aac(dataset):
         j = 0
     return X_aac
 
-data = list(SeqIO.parse("../Dataset/Selected30_families_tcdb2.fasta", "fasta"))
-aac = convert_to_aac(data)
+#data = list(SeqIO.parse("../Dataset/Selected30_families_tcdb2.fasta", "fasta"))
+

@@ -2,7 +2,7 @@ import numpy as np
 from Bio import SeqIO
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 
-def convert_to_paac(dataset):
+def extract_paac(dataset):
     # Separate sequences
     sequences = [str(ro.seq) for ro in dataset]
     # Map amino acids
@@ -36,6 +36,3 @@ def convert_to_paac(dataset):
         row += 1
     return X_paac
 
-data = list(SeqIO.parse("../Dataset/Selected30_families_tcdb2.fasta", "fasta"))
-paac = convert_to_paac(data)
-print(paac)
