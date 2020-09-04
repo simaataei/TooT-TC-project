@@ -1,3 +1,4 @@
+
 from sklearn import svm, metrics
 from Bio import SeqIO
 import numpy as np
@@ -11,6 +12,7 @@ from sklearn.model_selection import cross_val_score, cross_validate
 from sklearn.model_selection import KFold
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.metrics import recall_score,f1_score
@@ -33,22 +35,12 @@ family_onehot_x = extract_one_hot(family_data)
 
 #5-fold cross validation
 #linear kernel
-kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_aac_x):
-    print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_aac_x[train_index], family_aac_x[test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
 
-    # normalize
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
-
-clf = RandomForestClassifier(max_depth=20, random_state=0)
+clf = KNeighborsClassifier(n_neighbors=5)
 scoring = {'precision_macro','recall_macro','f1_macro'}
 Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
-f = open("RF_families_aac.txt","w+")
-f.write('max_depth=20\n')
+f = open("KNN_families_aac.txt","w+")
+f.write('n_neighbors=5\n')
 f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
 f.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
 f.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
@@ -57,23 +49,12 @@ f.write(str(Linear_scores)+'\n')
 
 ###PAAC
 #5-fold cross validation
-#linear kernel
-kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_paac_x):
-    print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_paac_x[train_index], family_paac_x[test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
 
-    # normalize
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
-
-clf = RandomForestClassifier(max_depth=20, random_state=0)
+clf = KNeighborsClassifier(n_neighbors=5)
 scoring = {'precision_macro','recall_macro','f1_macro'}
 Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
-f1 = open("RF_families_PAAC.txt","w+")
-f1.write('max_depth=20\n')
+f1 = open("KNN_families_PAAC.txt","w+")
+f1.write('n_neighbors=5\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
 f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
 f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
@@ -82,23 +63,11 @@ f1.write(str(Linear_scores)+'\n')
 #################one_hot
 #5-fold cross validation
 #linear kernel
-kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_onehot_x ):
-    print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_onehot_x [train_index], family_onehot_x [test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
-
-    # normalize
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
-
-
-clf = RandomForestClassifier(max_depth=20, random_state=0)
+clf = KNeighborsClassifier(n_neighbors=5)
 scoring = {'precision_macro','recall_macro','f1_macro'}
 Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
-f1 = open("RF_families_onehot.txt","w+")
-f1.write('max_depth=20\n')
+f1 = open("KNN_families_onehot.txt","w+")
+f1.write('n_neighbors=5\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
 f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
 f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')

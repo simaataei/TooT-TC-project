@@ -9,6 +9,7 @@ from Feature_exctraction.One_hot_encoding import extract_one_hot
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score, cross_validate
 from sklearn.model_selection import KFold
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.metrics import recall_score,f1_score
@@ -91,6 +92,11 @@ for train_index, test_index in kf.split(Subfamily_paac_x):
     print("TRAIN:", len(train_index), "TEST:", len(test_index))
     X_train, X_test = Subfamily_paac_x[train_index], Subfamily_paac_x[test_index]
     y_train, y_test = Subfamily_y[train_index], Subfamily_y[test_index]
+
+    # normalize
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
 
 clf = svm.SVC(kernel='linear', C=1)
 scoring = {'precision_macro','recall_macro','f1_macro'}

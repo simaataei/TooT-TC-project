@@ -9,6 +9,8 @@ from Feature_exctraction.One_hot_encoding import extract_one_hot
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score, cross_validate
 from sklearn.model_selection import KFold
+from sklearn.preprocessing import StandardScaler
+
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.metrics import recall_score,f1_score
@@ -36,6 +38,16 @@ for train_index, test_index in kf.split(family_aac_x):
     print("TRAIN:", len(train_index), "TEST:", len(test_index))
     X_train, X_test = family_aac_x[train_index], family_aac_x[test_index]
     y_train, y_test = family_y[train_index], family_y[test_index]
+
+    # normalize
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+
+
+
+
+
 
 clf = svm.SVC(kernel='linear', C=1)
 scoring = {'precision_macro','recall_macro','f1_macro'}
@@ -92,6 +104,11 @@ for train_index, test_index in kf.split(family_paac_x):
     X_train, X_test = family_paac_x[train_index], family_paac_x[test_index]
     y_train, y_test = family_y[train_index], family_y[test_index]
 
+    # normalize
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+
 clf = svm.SVC(kernel='linear', C=1)
 scoring = {'precision_macro','recall_macro','f1_macro'}
 Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
@@ -144,6 +161,11 @@ for train_index, test_index in kf.split(family_onehot_x ):
     print("TRAIN:", len(train_index), "TEST:", len(test_index))
     X_train, X_test = family_onehot_x [train_index], family_onehot_x [test_index]
     y_train, y_test = family_y[train_index], family_y[test_index]
+
+    # normalize
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
 
 clf = svm.SVC(kernel='linear', C=1)
 scoring = {'precision_macro','recall_macro','f1_macro'}
