@@ -12,35 +12,35 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import LinearSVC
 from sklearn.metrics import recall_score,f1_score
-##################family classification##############
+##################Subfamily classification##############
 #read the data
-family_data = list(SeqIO.parse("../Dataset/Selected30_families_tcdb2.fasta", "fasta"))
+Subfamily_data = list(SeqIO.parse("../Dataset/Selected30_subfamilies_tcdb2.fasta", "fasta"))
 
 
 #extract lables
-family_y = extract_families(family_data)
+Subfamily_y = extract_subfamilies(Subfamily_data)
 y = np.zeros(2940)
 
 
 
 #extract features
-family_aac_x = extract_aac(family_data)
-family_paac_x = extract_paac(family_data)
-family_onehot_x = extract_one_hot(family_data)
+Subfamily_aac_x = extract_aac(Subfamily_data)
+Subfamily_paac_x = extract_paac(Subfamily_data)
+Subfamily_onehot_x = extract_one_hot(Subfamily_data)
 
 
 #5-fold cross validation
 #linear kernel
 kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_aac_x):
+for train_index, test_index in kf.split(Subfamily_aac_x):
     print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_aac_x[train_index], family_aac_x[test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
+    X_train, X_test = Subfamily_aac_x[train_index], Subfamily_aac_x[test_index]
+    y_train, y_test = Subfamily_y[train_index], Subfamily_y[test_index]
 
 clf = svm.SVC(kernel='linear', C=1)
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
-f = open("SVM_families_aac.txt","w+")
+Linear_scores = cross_validate(clf, Subfamily_aac_x, Subfamily_y, scoring=scoring, cv=5)
+f = open("SVM_Subfamilies_aac.txt","w+")
 f.write('kernel=linear, C=1\n')
 f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
 f.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
@@ -50,7 +50,7 @@ f.write(str(Linear_scores)+'\n')
 
 clf = svm.SVC(kernel='rbf')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_aac_x, Subfamily_y, scoring=scoring, cv=5)
 
 f.write('kernel=RBF\n')
 f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -61,7 +61,7 @@ f.write(str(Linear_scores)+'\n')
 #poly
 clf = svm.SVC(kernel='poly')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_aac_x, Subfamily_y, scoring=scoring, cv=5)
 
 f.write('kernel=poly\n')
 f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -73,7 +73,7 @@ f.write(str(Linear_scores)+'\n')
 #sigmoid
 clf = svm.SVC(kernel='sigmoid')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_aac_x, Subfamily_y, scoring=scoring, cv=5)
 
 f.write('kernel=sigmoid\n')
 f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -87,15 +87,15 @@ f.write(str(Linear_scores)+'\n')
 #5-fold cross validation
 #linear kernel
 kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_paac_x):
+for train_index, test_index in kf.split(Subfamily_paac_x):
     print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_paac_x[train_index], family_paac_x[test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
+    X_train, X_test = Subfamily_paac_x[train_index], Subfamily_paac_x[test_index]
+    y_train, y_test = Subfamily_y[train_index], Subfamily_y[test_index]
 
 clf = svm.SVC(kernel='linear', C=1)
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
-f1 = open("SVM_families_PAAC.txt","w+")
+Linear_scores = cross_validate(clf, Subfamily_paac_x, Subfamily_y, scoring=scoring, cv=5)
+f1 = open("SVM_Subfamilies_PAAC.txt","w+")
 f1.write('kernel=linear, C=1\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
 f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
@@ -105,7 +105,7 @@ f1.write(str(Linear_scores)+'\n')
 
 clf = svm.SVC(kernel='rbf')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_paac_x, Subfamily_y, scoring=scoring, cv=5)
 
 f1.write('kernel=RBF\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -116,7 +116,7 @@ f1.write(str(Linear_scores)+'\n')
 #poly
 clf = svm.SVC(kernel='poly')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_paac_x, Subfamily_y, scoring=scoring, cv=5)
 
 f1.write('kernel=poly\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -128,7 +128,7 @@ f1.write(str(Linear_scores)+'\n')
 #sigmoid
 clf = svm.SVC(kernel='sigmoid')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_paac_x, Subfamily_y, scoring=scoring, cv=5)
 
 f1.write('kernel=sigmoid\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -140,15 +140,15 @@ f1.write(str(Linear_scores)+'\n')
 #5-fold cross validation
 #linear kernel
 kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_onehot_x ):
+for train_index, test_index in kf.split(Subfamily_onehot_x ):
     print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_onehot_x [train_index], family_onehot_x [test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
+    X_train, X_test = Subfamily_onehot_x [train_index], Subfamily_onehot_x [test_index]
+    y_train, y_test = Subfamily_y[train_index], Subfamily_y[test_index]
 
 clf = svm.SVC(kernel='linear', C=1)
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
-f1 = open("SVM_families_onehot.txt","w+")
+Linear_scores = cross_validate(clf, Subfamily_onehot_x , Subfamily_y, scoring=scoring, cv=5)
+f1 = open("SVM_Subfamilies_onehot.txt","w+")
 f1.write('kernel=linear, C=1\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
 f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
@@ -158,7 +158,7 @@ f1.write(str(Linear_scores)+'\n')
 
 clf = svm.SVC(kernel='rbf')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_onehot_x , Subfamily_y, scoring=scoring, cv=5)
 
 f1.write('kernel=RBF\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -169,7 +169,7 @@ f1.write(str(Linear_scores)+'\n')
 #poly
 clf = svm.SVC(kernel='poly')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_onehot_x , Subfamily_y, scoring=scoring, cv=5)
 
 f1.write('kernel=poly\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
@@ -181,7 +181,7 @@ f1.write(str(Linear_scores)+'\n')
 #sigmoid
 clf = svm.SVC(kernel='sigmoid')
 scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
+Linear_scores = cross_validate(clf, Subfamily_onehot_x , Subfamily_y, scoring=scoring, cv=5)
 
 f1.write('kernel=sigmoid\n')
 f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
