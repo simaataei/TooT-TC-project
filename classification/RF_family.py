@@ -30,76 +30,47 @@ family_aac_x = extract_aac(family_data)
 family_paac_x = extract_paac(family_data)
 family_onehot_x = extract_one_hot(family_data)
 
-
+max_depth=[5,10,20,30]
 #5-fold cross validation
-#linear kernel
-kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_aac_x):
-    print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_aac_x[train_index], family_aac_x[test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
+f = open("../Results/RF_families_aac.txt", "w+")
+for m in max_depth:
+    clf = RandomForestClassifier(max_depth=m, random_state=0)
+    scoring = {'precision_macro','recall_macro','f1_macro'}
+    Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
+    f.write('max_depth='+str(m)+'\n')
+    f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
+    f.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
+    f.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
+    f.write(str(Linear_scores)+'\n')
 
-    # normalize
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
-
-clf = RandomForestClassifier(max_depth=20, random_state=0)
-scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
-f = open("RF_families_aac.txt","w+")
-f.write('max_depth=20\n')
-f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
-f.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
-f.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
-f.write(str(Linear_scores)+'\n')
 
 
 ###PAAC
 #5-fold cross validation
-#linear kernel
-kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_paac_x):
-    print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_paac_x[train_index], family_paac_x[test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
 
-    # normalize
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
+    f1 = open("../Results/RF_families_PAAC.txt", "w+")
+for m in max_depth:
+    clf = RandomForestClassifier(max_depth=m, random_state=0)
+    scoring = {'precision_macro','recall_macro','f1_macro'}
+    Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
 
-clf = RandomForestClassifier(max_depth=20, random_state=0)
-scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
-f1 = open("RF_families_PAAC.txt","w+")
-f1.write('max_depth=20\n')
-f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
-f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
-f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
-f1.write(str(Linear_scores)+'\n')
+    f1.write('max_depth='+str(m)+'\n')
+    f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
+    f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
+    f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
+    f1.write(str(Linear_scores)+'\n')
 
 #################one_hot
 #5-fold cross validation
-#linear kernel
-kf = KFold(n_splits=5, random_state=0, shuffle=True)
-for train_index, test_index in kf.split(family_onehot_x ):
-    print("TRAIN:", len(train_index), "TEST:", len(test_index))
-    X_train, X_test = family_onehot_x [train_index], family_onehot_x [test_index]
-    y_train, y_test = family_y[train_index], family_y[test_index]
 
-    # normalize
-    sc = StandardScaler()
-    X_train = sc.fit_transform(X_train)
-    X_test = sc.transform(X_test)
+f2 = open("../Results/RF_families_onehot.txt", "w+")
+for m in max_depth:
+    clf = RandomForestClassifier(max_depth=m, random_state=0)
+    scoring = {'precision_macro','recall_macro','f1_macro'}
+    Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
 
-
-clf = RandomForestClassifier(max_depth=20, random_state=0)
-scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
-f1 = open("RF_families_onehot.txt","w+")
-f1.write('max_depth=20\n')
-f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
-f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
-f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
-f1.write(str(Linear_scores)+'\n')
+    f2.write('max_depth='+str(m)+'\n')
+    f2.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
+    f2.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
+    f2.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
+    f2.write(str(Linear_scores)+'\n')

@@ -35,40 +35,47 @@ family_onehot_x = extract_one_hot(family_data)
 
 #5-fold cross validation
 #linear kernel
+f = open("../Results/KNN_families_aac.txt", "w+")
+Neighbor_n=[1,5,10,20]
+for n in Neighbor_n:
+    clf = KNeighborsClassifier(n_neighbors=n)
+    scoring = {'precision_macro','recall_macro','f1_macro'}
+    Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
 
-clf = KNeighborsClassifier(n_neighbors=5)
-scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_aac_x, family_y, scoring=scoring, cv=5)
-f = open("KNN_families_aac.txt","w+")
-f.write('n_neighbors=5\n')
-f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
-f.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
-f.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
-f.write(str(Linear_scores)+'\n')
+    f.write('n_neighbors='+str(n)+'\n')
+    f.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
+    f.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
+    f.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
+    f.write(str(Linear_scores)+'\n')
 
 
 ###PAAC
 #5-fold cross validation
+f1 = open("../Results/KNN_families_PAAC.txt", "w+")
+for n in Neighbor_n:
+    clf = KNeighborsClassifier(n_neighbors=n)
+    scoring = {'precision_macro','recall_macro','f1_macro'}
+    Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
 
-clf = KNeighborsClassifier(n_neighbors=5)
-scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_paac_x, family_y, scoring=scoring, cv=5)
-f1 = open("KNN_families_PAAC.txt","w+")
-f1.write('n_neighbors=5\n')
-f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
-f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
-f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
-f1.write(str(Linear_scores)+'\n')
+    f1.write('n_neighbors='+str(n)+'\n')
+    f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
+    f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
+    f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
+    f1.write(str(Linear_scores)+'\n')
 
 #################one_hot
 #5-fold cross validation
 #linear kernel
-clf = KNeighborsClassifier(n_neighbors=5)
-scoring = {'precision_macro','recall_macro','f1_macro'}
-Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
-f1 = open("KNN_families_onehot.txt","w+")
-f1.write('n_neighbors=5\n')
-f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
-f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
-f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
-f1.write(str(Linear_scores)+'\n')
+
+f1 = open("../Results/KNN_families_onehot.txt", "w+")
+for n in Neighbor_n:
+    clf = KNeighborsClassifier(n_neighbors=n)
+
+    scoring = {'precision_macro','recall_macro','f1_macro'}
+    Linear_scores = cross_validate(clf, family_onehot_x , family_y, scoring=scoring, cv=5)
+
+    f1.write('n_neighbors='+str(n)+'\n')
+    f1.write("Average Precision: "+str(sum(Linear_scores['test_precision_macro'])/5)+'\n')
+    f1.write("Average Recall: "+str(sum(Linear_scores['test_recall_macro'])/5)+'\n')
+    f1.write("Average f1-Measure: "+str(sum(Linear_scores['test_f1_macro'])/5)+'\n')
+    f1.write(str(Linear_scores)+'\n')
