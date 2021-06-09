@@ -24,6 +24,6 @@ def extract_one_hot(dataset):
         resampled_features.append(resample_sequence(sample).ravel())
     resampled_features = np.array(resampled_features)
     return resampled_features
-data = list(SeqIO.parse("../Dataset/Selected30_families_tcdb2.fasta", "fasta"))
-one_hot = extract_one_hot(data)
-print(one_hot)
+#data = list(SeqIO.parse("../Dataset/Selected30_families_tcdb2.fasta", "fasta"))
+#one_hot = extract_one_hot(data)
+#print(one_hot)

@@ -7,6 +7,10 @@ import numpy as np
 import sklearn.svm
 import matplotlib.pyplot as plt
 from sklearn import metrics
+from sklearn.ensemble import RandomForestClassifier
+import csv
+from sklearn.neighbors import KNeighborsClassifier
+
 
 def count_families(data):
     family_count ={}
@@ -24,7 +28,7 @@ def count_families(data):
 
 
 family_data = list(SeqIO.parse("../Dataset/Selected30_families_tcdb2.fasta", "fasta"))
-test_data = list(SeqIO.parse("../Results/BLAST/Unclassified/unclassified_evalue_0.0001.fasta", "fasta"))
+test_data = list(SeqIO.parse("../Results/BLAST/Unclassified/unclassified_evalue_1e-30.fasta", "fasta"))
 
 
 unclassified = {}
@@ -85,33 +89,163 @@ family_onehot_x_test = extract_one_hot(test_data)
 #SVMs
 #RBF
 #AAC
-rbf_svc = sklearn.svm.SVC(kernel='rbf')
-rbf_svc.fit(family_aac_x_train, y_train )
-predicted = rbf_svc.predict(family_aac_x_test)
 
-f1_rbf = metrics.f1_score(y_test, predicted, average="macro")
+with open('../Results/BLAST/unclassified_classification_1e-30.csv', "w", newline='') as f:
+    writer = csv.writer(f, delimiter=',')
+    result =[]
+    result.append("SVM")
+    result.append("Kernel = RBF")
+    rbf_svc = sklearn.svm.SVC(kernel='rbf')
+    rbf_svc.fit(family_aac_x_train, y_train )
+    predicted = rbf_svc.predict(family_aac_x_test)
 
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+
+
+    #PAAC
+    rbf_svc = sklearn.svm.SVC(kernel='rbf')
+    rbf_svc.fit(family_paac_x_train, y_train )
+    predicted = rbf_svc.predict(family_paac_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+
+
+
+    #one_hot
+    rbf_svc = sklearn.svm.SVC(kernel='rbf')
+    rbf_svc.fit(family_onehot_x_train, y_train )
+    predicted = rbf_svc.predict(family_onehot_x_test)
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    writer.writerow(result)
+
+
+#Sigmoid
+
+    result = []
+    result.append("SVM")
+    result.append("Kernel = Sigmoid")
+    linear_svc = sklearn.svm.SVC(kernel='sigmoid')
+    linear_svc.fit(family_aac_x_train, y_train)
+    predicted = linear_svc.predict(family_aac_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    # PAAC
+    linear_svc = sklearn.svm.SVC(kernel='sigmoid')
+    linear_svc.fit(family_paac_x_train, y_train)
+    predicted = linear_svc.predict(family_paac_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    # one_hot
+    linear_svc = sklearn.svm.SVC(kernel='sigmoid')
+    linear_svc.fit(family_onehot_x_train, y_train)
+    predicted = linear_svc.predict(family_onehot_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    writer.writerow(result)
+
+#Poly
+
+    result = []
+    result.append("SVM")
+    result.append("Kernel = Polynomial")
+    linear_svc = sklearn.svm.SVC(kernel='poly')
+    linear_svc.fit(family_aac_x_train, y_train)
+    predicted = linear_svc.predict(family_aac_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    # PAAC
+    linear_svc = sklearn.svm.SVC(kernel='poly')
+    linear_svc.fit(family_paac_x_train, y_train)
+    predicted = linear_svc.predict(family_paac_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    # one_hot
+    linear_svc = sklearn.svm.SVC(kernel='poly')
+    linear_svc.fit(family_onehot_x_train, y_train)
+    predicted = linear_svc.predict(family_onehot_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    writer.writerow(result)
+
+    #Linear
+#AAC
+    result= []
+    result.append("SVM")
+    result.append("Kernel = Linear")
+    linear_svc = sklearn.svm.SVC(kernel='linear')
+    linear_svc.fit(family_aac_x_train, y_train )
+    predicted = linear_svc.predict(family_aac_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    #PAAC
+    linear_svc = sklearn.svm.SVC(kernel='linear')
+    linear_svc.fit(family_paac_x_train, y_train )
+    predicted = linear_svc.predict(family_paac_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+
+    #one_hot
+    linear_svc = sklearn.svm.SVC(kernel='linear')
+    linear_svc.fit(family_onehot_x_train, y_train )
+    predicted = linear_svc.predict(family_onehot_x_test)
+
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+    writer.writerow(result)
+
+#Random forest
+    result = []
+    result.append("Random Forest")
+    result.append("Max Depth =30")
+#AAC
+    clf = RandomForestClassifier(max_depth=30, random_state=0)
+    clf.fit(family_aac_x_train, y_train )
+    predicted = clf.predict(family_aac_x_test)
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
 
 #PAAC
-rbf_svc = sklearn.svm.SVC(kernel='rbf')
-rbf_svc.fit(family_paac_x_train, y_train )
-predicted = rbf_svc.predict(family_paac_x_test)
-
-f1_rbf = metrics.f1_score(y_test, predicted, average="macro")
+    clf = RandomForestClassifier(max_depth=30, random_state=0)
+    clf.fit(family_paac_x_train, y_train)
+    predicted = clf.predict(family_paac_x_test)
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
 
 #one_hot
-rbf_svc = sklearn.svm.SVC(kernel='rbf')
-rbf_svc.fit(family_onehot_x_train, y_train )
-predicted = rbf_svc.predict(family_onehot_x_test)
+    clf = RandomForestClassifier(max_depth=30, random_state=0)
+    clf.fit(family_onehot_x_train, y_train)
+    predicted = clf.predict(family_onehot_x_test)
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
+    writer.writerow(result)
 
-f1_rbf = metrics.f1_score(y_test, predicted, average="macro")
+#KNN
+    result = []
+    result.append("KNN")
+    result.append("Number of Neighbors =5")
+#AAC
+    neigh = KNeighborsClassifier(n_neighbors=3)
+    neigh.fit(family_aac_x_train, y_train )
+    predicted = neigh.predict(family_aac_x_test)
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
 
-linear_svc = sklearn.svm.SVC(kernel='linear')
-linear_svc.fit(family_onehot_x_train, y_train )
-predicted = linear_svc.predict(family_onehot_x_test)
+#PAAC
+    neigh = KNeighborsClassifier(n_neighbors=3)
+    neigh.fit(family_paac_x_train, y_train)
+    predicted = neigh.predict(family_paac_x_test)
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
 
-f1_linear = metrics.f1_score(y_test, predicted, average="macro")
-a=1
+#one_hot
+    neigh = KNeighborsClassifier(n_neighbors=3)
+    neigh.fit(family_onehot_x_train, y_train)
+    predicted = neigh.predict(family_onehot_x_test)
+    result.append(metrics.f1_score(y_test, predicted, average="macro"))
 
-
+    writer.writerow(result)
 
